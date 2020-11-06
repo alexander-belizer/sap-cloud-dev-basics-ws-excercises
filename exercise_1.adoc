@@ -1,0 +1,181 @@
+= Exercise 1: Examine OData Service and create a Destination
+include::cfg/common_adoc/header.adoc[]
+
+== Objectives
+
+* Examine OData Service and test it
+* Create a destination for the Northwind service
+* Create dev spaces for Business Application Studio
+
+== Examine an Example OData Service (Northwind)
+
+We will use the free OData V2 Northwind Service as example.
+
+link:https://services.odata.org/V2/Northwind/Northwind.svc/[https://services.odata.org/V2/Northwind/Northwind.svc/]
+
+image::exc1-northwind-service-doc.jpg[exc1-northwind-service-doc] 
+
+=== Metadata
+
+* Metadata document describes the OData service
+* Entity types
+** Properties
+** Key properties 
+** Navigationv properties
+* Entity sets
+* Associatons
+
+link:https://services.odata.org/V2/Northwind/Northwind.svc/$metadata/[https://services.odata.org/V2/Northwind/]
+
+=== Query String Parameters 
+
+.Query String Parameters
+[options="header",cols="15,85a"]
+|===
+|Parameter	|Description
+// --------------------------------------------------------------------------------------------------------------
+|`$count`	|The `$count` system query option allows clients to request a count of the matching resources included with the resources in the response.
+
+|`$expand`	|The `$expand` system query option specifies the related resources to be included in line with retrieved resources. You might think of this is an SQL join operation. Only navigation properties can be expanded; you can identify navigation propertes in the Data Model entity relationship diagram.
+
+|`$filter`	|The `$filter` system query option allows clients to filter a collection of resources that are addressed by a request URL.
+
+|`$expand`	|The `$expand` system query option specifies the related resources to be included in line with retrieved resources. You might think of this is an SQL join operation. Only navigation properties can be expanded; you can identify navigation propertes in the Data Model entity relationship diagram.
+|`$orderby`	|The `$orderby` system query option allows clients to request resources in a particular order.
+|`$search`	|The `$search` system query option allows clients to request entities matching a free-text search expression.
+|`$select`	|The `$search` system query option allows clients to request entities matching a free-text search expression.
+|`$skip`	|The `$skip` query option requests the number of items in the queried collection that are to be skipped and not included in the result. A client can request a particular page of items by combining `$top` and `$skip`.
+
+|`$top`		|The `$top` system query option requests the number of items in the queried collection to be included in the result. A client can request a particular page of items by combining `$top` and `$skip`.
+// --------------------------------------------------------------------------------------------------------------
+|=== 
+
+=== Test with Postman
+
+There are different tools to test APIs. 
+
+* SOAPUI (link:https://www.soapui.org/[Homepage])
+* Insomnia (link:https://insomnia.rest/[Homepage])
+* Postman (link:https://www.postman.com/[Homepage])
+
+{zwsp} +
+
+In current exercise we will use Postman, as it is the most popular and widely used API Testing tool.
+
+* List of Products -> `../Products`
+* Product with ProductID 3 -> `../Products(3)`
+* Expand Category for Product 3 -> `../Products(3)?$expand=Category`
+* Return first 10 Products -> `../Products?$top=10`
+* Return products 11 - 20 -> `../Products?$top=10&$skip=10`
+
+{zwsp} +
+
+== Create Destination
+
+* We will create a destination for the Northwind service
+* You can find destinations on your Subaccount level in Connectivity section
+
+image::exc1-destination-drawer.jpg[destination-drawer, title="Destination menu"]
+
+{zwsp} +
+
+* Add the destination 
+
+{zwsp} +
+
+image::exc1-northwind-destination.jpg[northwind-destination, title="Creation of new destination"]
+
+*Set up following destination configuration.*
+
+{zwsp} +
+
+[options="header",cols="2,8a"]
+|===
+|Attribute 		|Value
+|Name           |Northwind
+|Type           |HTTP
+|Description    |Northwind OData services
+|URL            |https://services.odata.org/V2/Northwind/Northwind.svc
+|Proxy Type     |Internet
+|Authentication |NoAuthentication
+|===
+
+{zwsp} +
+
+*Add Properties by clicking on `New Property`.* 
+
+{zwsp} +
+
+[options="header",cols="4,6a"]
+|===
+|Property					|Value
+|HTML5.DynamicDestination	|true
+|WebIDEAdditionalData		|full_url 
+|WebIDEEnabled				|true
+|WebIDESystem				|Northwind_Data
+|WebIDEUsage				|odata_gen
+|===
+
+Make sure that checkbox "Use default JDK truststore" is enabled. 
+
+{zwsp} +
+
+*Save and Check connection*
+
+{zwsp} +
+
+image::exc1-northwind-check-connection.jpg[northwind-check-connection]
+
+{zwsp} +
+
+== Enable Business Application Studio
+
+To enable Business Application Studio you need to subscribe to corresponding Service/Application.
+
+=== Subscribe to "SAP Business Applicaiton Studio"
+
+. Go to Subscriptions and Search for "SAP Business Application Studio"
+. If not already subscribed, Subscribe to "SAP Business Application Studio"
+
+{zwsp} +
+
+image::exc1-bas-subscription.jpg[bas-subscription] 
+
+{zwsp} +
+
+=== Create Development Spaces
+
+When starting Business Application Studio you will be asked to create a Development space.
+
+{zwsp} +
+
+image::exc1-bas-before-create.jpg[bas-before-create] 
+
+{zwsp} +
+
+Because of the different development tools available in the IDE depending on type of Development Space, 
+we will need two dev spaces for all developments during this course.
+
+{zwsp} +
+
+Create new SAP Fiori development space with name "fiori" 
+
+{zwsp} +
+
+image::exc1-dev-space-fiori.jpg[dev-space-fiori, title="Creation of FIORI dev space"]
+
+{zwsp} +
+
+Create new SAP Cloud Business Application Development space with name "cap". 
+
+{zwsp} +
+
+image::exc1-dev-space-cap.jpg[dev-space-cap, title="Creation of CAP dev space"]
+
+{zwsp} +
+
+For the next Exercise we can already start the "fiori" dev space.
+
+{zwsp} +
+
+image::exc1-dev-space-created.jpg[dev-space-created, title="Dev Space overview"] 

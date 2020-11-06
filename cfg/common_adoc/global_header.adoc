@@ -1,0 +1,91 @@
+// deactivate Spellcheck for current document.
+// spellcheck-off
+//
+// asciidoc settings for DE (German)
+// ==================================
+// headings and table of contents
+// enable table-of-contents
+// toc-title definition MUST follow document title without blank line!
+:toc-title: Inhaltsverzeichnis
+//:toc: preamble
+:toc:
+:toclevels: 3
+:sectnums:
+:sectnumlevels: 5
+:pagenums:
+// homepage
+:homepage: https://www.emineo.ch/
+// document type for generation
+:doctype: book
+:media: print
+// stylesheet und layouting
+//:stylesheet: c:/_data/adocs/_cfg/css/adoc_css_emi.css
+// use icons for TIP/IMPORTANT etc.
+:icons: font
+////
+I compared the nofooter and :last-update-label!:
+and I like last-update-label! better 😁
+////
+// deactivate document footer
+// :nofooter:
+//:last-update-label!:
+//
+//:title-logo-image: ./img/emi_logo.png
+// 
+// Enable experimental Features
+:experimental:
+//
+// highlight source code blocks
+// Source Highlighting: pygments kann ziemlich jeden Sourcecode korrekt darstellen.
+// :source-highlighter: highlightjs
+//
+// ifdef::pygments-available[]
+:source-highlighter: pygments
+:pygments-style: manni
+:pygments-linenums-mode: table
+// endif::[]
+//
+//:source-linenums-option: table
+////
+// For full function with Asciidoctor (ruby)
+:source-highlighter: pygments
+:pygments-style: manni
+:pygments-linenums-mode: inline
+////
+// --> Diese Funktionieren... Dabei funktioniert prettify besser mit abap
+//:source-highlighter: highlightjs
+//:source-highlighter: prettify
+// --> Diese funktionieren nicht:
+//:source-highlighter: coderay
+//:source-highlighter: pygments
+//
+//Diagrams
+//:mermaid: C:\Users\alexander.belizer\scoop\node_modules\mermaid.cli
+:plantuml-server-url: http://www.plantuml.com/plantuml
+//:plantuml-fetch-diagram:
+//
+//
+// Include for Images -> where are images located?
+:imagesdir: ./src_img
+:imagesoutdir: {imagesdir}
+// Captions for German only right now
+//:toc-title: Inhaltsverzeichnis
+//
+//
+//Captions are all language dependant
+//
+include::attributes/attributes.adoc[]
+// //
+// :caution-caption: Achtung
+// :important-caption: Wichtig
+// :note-caption: Hinweis
+// :tip-caption: Tip
+// :warning-caption: Warnung
+// //
+// :appendix-caption: Anhang
+// :example-caption: Beispiel
+// :figure-caption: Abbildung
+// :table-caption: Tabelle
+//
+// Remove Chapter Labels
+:chapter-label:

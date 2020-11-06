@@ -1,0 +1,448 @@
+= Excercise 2: Simple UI5 App
+include::cfg/common_adoc/header.adoc[]
+
+== Objectives
+
+* Create a simple app with `Master - Detail wizard`
+* Create a run configuration & run the app
+* Change the app
+
+== Step 1 
+
+* Create a new project from template
+* In Business Application Studo go to Help / Welcome Page
+* Choose Start / Create Project from template
+
+image::exc2-step1.jpg[alt]
+
+== Step 2
+
+* New Project from template wizzard
+- Choose SAP Fiori Freestyle Project
+
+image::exc2-step2.jpg[alt]
+
+== Step 3
+
+* New Project from template wizzard
+- Choose SAP Fiori Master-Detail Application
+
+image::exc2-step3.jpg[alt]
+
+== Step 4
+
+* New Project from template wizzard
+- Give in Project Name
+
+image:exc2-step4.jpg[alt]
+
+== Step 5
+
+* New Project from template wizzard
+- Choose Standalone Approuter as HTML5 Application Runtime
+
+image::exc2-step5.jpg[alt]
+
+== Step 6
+
+* New Project from template wizzard
+- Basic Attributes 
+- Leave default values  
+
+image::exc2-step6.jpg[alt]
+
+
+== Step 7
+
+* New Project from template wizzard
+- Add title
+- Leave default values
+
+image::exc2-step7.jpg[alt]
+
+== Step 8
+
+* New Project from template wizzard
+- Choose My SAP Systems as system
+- Choose Northwind as source
+
+image::exc2-step8.jpg[alt]
+image::exc2-step8-1.jpg[alt]
+
+== Step 9
+
+* New Project from template wizzard
+
+image::exc2-step9.jpg[alt]
+image::exc2-step9-1.jpg[alt]
+
+== Step 10
+
+* New Project from template wizzard
+- Choose Open in New Workspace 
+
+image:exc2-step10.jpg[alt]
+
+== Run Configuration
+
+* New Project from template wizzard
+- Accept default values
+- Bind the Northwind Service
+- Click Run
+
+image::exc2-step11.jpg[alt]
+image::exc2-step11-1.jpg[alt]
+
+== The app
+
+* Now we have a running app
+
+image::exc2-step12.jpg[alt]
+
+* We have to change a few things -
+** Say something about GIT
+** Descriptions using i18n model
+** We will add expand to the Products entity in our OData model
+** We will adjust currency and unit of measure fields 
+** We will add some components - IconTabFilter, Form
+** We will display a picture from OData servis and create a formatter function
+
+=== What is GIT
+
+Git is a distributed version-control system for tracking changes in source code during software development. It is designed for coordinating work among programmers, but it can be used to track changes in any set of files. Its goals include speed, data integrity, and support for distributed, non-linear workflows.
+
+
+* GIT config
+
+`git config --global user.email "you@example.com"`
+
+`git config --global user.name "name surname"` 
+
+- Stage changes
+- Add Comment
+- Commit
+
+== Changes - i18n 
+
+- i18n stands for internationalization
+- Model used to store translations 
+- SAPUI5 - Resource model in manifest.json
+- Loaded automatically according to locale settings or Url parameters
+
+link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/]
+
+*Change the texts in `i18n.properties`
+
+|===
+|masterTitleCount                   |Products 
+|detailLineItemTableNoDataText      |No OrderDetails 
+|detailLineItemTableHeading         |Order Details 
+|detailLineItemTableHeadingCount    |Order Details ({0}) 
+|detailLineItemTableIDColumn        |Order
+|detailLineItemTableUnitNumberColumn|Quantity
+|===
+
+== Changes Master View
+1. Price Unit
+2. Expand Category, Supplier in Controller
+
+== 1. Price Unit
+
+- Change numberUnit to USD in ObjectListItem
+
+[source,xml]
+----
+<items>
+    <ObjectListItem
+        type="Navigation"
+        press=".onSelectionChange"
+        title="{ProductName}"
+        number="{
+            path: 'UnitPrice',
+            formatter: '.formatter.currencyValue'
+        }"
+        numberUnit="USD">
+----
+
+== 2. Expand Category, Supplier in Controller
+
+Add parameters object into List tag
+
+[source,xml]
+----
+<List
+    id="list"
+    width="auto"
+    class="sapFDynamicPageAlignContent"
+    items="{
+        path: '/Products',
+        sorter: {
+            path: 'ProductName',
+            descending: false
+        },
+        groupHeaderFactory: '.createGroupHeader',
+        parameters: {expand:'Category,Supplier'}
+    }"...>
+----
+
+
+
+
+== Changes Detail View
+
+1. Add IconTabBar in <semantic:Content>
+2. Move Table to IconTabFilter Orders
+3. Change Table
+4. Add namespace
+5. Add Forms in IconTabFilter Details 
+6. Add Header Content
+
+== 1. Add IconTabBar
+
+- Add IconTabBar into semantic:content
+
+[source,xml]
+----
+<semantic:content>
+    ..
+</semantic:content>
+----
+
+- IconTabBar
+
+[source,xml]
+----
+<IconTabBar selectedKey="__filter2" id="bar0">
+    <items>
+        <IconTabFilter text="Details"   id="filter5">
+            <content>
+            </content>
+        </IconTabFilter>
+        <IconTabFilter text="Orders"   id="filter3">
+            <content>                       
+            </content>
+        </IconTabFilter>                    
+        <IconTabFilter text="Rating"  id="filter4">
+            <content>
+            </content>
+        </IconTabFilter>       
+        </items>
+</IconTabBar> 
+----
+
+== 2. Move Table
+
+- Move Table into 
+
+[source,xml]
+----
+<IconTabFilter text="Orders"   id="filter3">
+    <content>
+        ..                      
+    </content>
+</IconTabFilter>
+----
+
+- Table
+
+[source,xml]
+----
+<Table
+    id="lineItemsList"
+    width="auto"
+    items="{Order_Details}"
+    updateFinished=".onListUpdateFinished"
+    noDataText="{i18n>detailLineItemTableNoDataText}"
+    busyIndicatorDelay="{detailView>/lineItemTableDelay}">
+    <headerToolbar>
+        <Toolbar>
+            <Title
+                id="lineItemsTitle"
+                text="{detailView>/lineItemListTitle}"
+                titleStyle="H3"
+                level="H3"/>
+        </Toolbar>
+    </headerToolbar>
+    <columns>
+        <Column>
+            <Text text="{i18n>detailLineItemTableIDColumn}"/>
+        </Column>
+        <Column
+            minScreenWidth="Tablet"
+            demandPopin="true"
+            hAlign="End">
+            <Text text="{i18n>detailLineItemTableUnitNumberColumn}"/>
+        </Column>
+    </columns>
+    <items>
+        <ColumnListItem>
+            <cells>
+                <ObjectIdentifier
+                    title="{OrderID}"
+                    />
+                <ObjectNumber
+                    number="{
+                        path: 'Quantity',
+                        formatter: '.formatter.currencyValue'
+                    }"
+                    unit="Units"/>
+            </cells>
+        </ColumnListItem>
+    </items>
+</Table>
+----
+
+== 3. Change table
+
+* Change displayed Units
+** Search in `<Table> <items>` the element `<ObjectNumber>` and change the binding for unit from `unit="{Quantity}"` to `unit="Units"`
+** Search in `<Table> <items>` the element `<ObjectIdentifier` and delete the binding for text `text="{OrderID}"`
+
+
+== 4. Add namespace
+
+- Add xmlns:form="sap.ui.layout.form
+
+[source,xml]
+<mvc:View
+	controllerName="ns.HTML5Module.controller.Detail"
+	xmlns="sap.m"
+	xmlns:semantic="sap.f.semantic"
+	xmlns:footerbar="sap.ushell.ui.footerbar"
+	xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form">
+
+== 5. Add Forms 
+
+- Add into IconTabBar Filter
+[source,xml]
+<IconTabFilter text="Details"   id="filter5">
+    <content>
+        ..
+    </content>
+</IconTabFilter>    
+
+- Forms
+
+[source,xml]
+<form:Form id="FormDetails"
+    editable="false">                              
+    <form:layout>
+        <form:ResponsiveGridLayout
+            labelSpanXL="4"
+            labelSpanL="3"
+            labelSpanM="4"
+            labelSpanS="12"
+            adjustLabelSpan="false"
+            emptySpanXL="0"
+            emptySpanL="4"
+            emptySpanM="0"
+            emptySpanS="0"
+            columnsXL="2"
+            columnsL="1"
+            columnsM="1"
+            singleContainerFullSize="false" />
+    </form:layout>                                                                
+    <form:formContainers>
+        <form:FormContainer title="Details">
+            <form:formElements>
+                <form:FormElement label="Unit price">
+                    <form:fields>
+                        <Text text="{UnitPrice}" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="Quantity per Unit">
+                    <form:fields>
+                        <Text text="{QuantityPerUnit}" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="Units in Stock">
+                    <form:fields>
+                        <Text text="{UnitsInStock}" />
+                    </form:fields>
+                </form:FormElement>   
+                <form:FormElement label="Units on Order">
+                    <form:fields>
+                        <Text text="{UnitsOnOrder}" />
+                    </form:fields>
+                </form:FormElement>       
+                <form:FormElement label="Reorder Level">
+                    <form:fields>
+                        <Text text="{ReorderLevel}" />
+                    </form:fields>
+                </form:FormElement>                                                                                                                             
+            </form:formElements>
+        </form:FormContainer>                                
+        <form:FormContainer title="Supplier">
+            <form:formElements>
+                <form:FormElement label="Full name of the contact">
+                    <form:fields>
+                        <Text text="{Supplier/CompanyName}" id="nameText"  />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="Street and number">
+                    <form:fields>
+                        <Text text="{Supplier/Address}" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="ZIP Code and City">
+                    <form:fields>
+                        <Text text="{Supplier/PostalCode} {Supplier/City}" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="Country">
+                    <form:fields>
+                        <Text text="{Supplier/Country}" id="countryText" />
+                    </form:fields>
+                </form:FormElement>
+            </form:formElements>
+        </form:FormContainer>
+    </form:formContainers>                                
+</form:Form>
+
+== 6. Add Header Content
+
+- in semantic:headerContent add ObjectHeader
+
+[source,xml]
+<ObjectHeader 
+    icon="{path: 'Category/Picture', formatter: '.formatter.formatPicture' }"
+    title="{Category/CategoryName}">
+</ObjectHeader> 
+
+== Add formatter function 
+
+* formatter: '.formatter.formatPicture'
+
+[source,js]
+----
+formatPicture : function (sValue) {
+    if (sValue) {
+        var sTrimmedData = sValue.substr(104);
+        return "data:image/bmp;base64," + sTrimmedData;                
+    }
+}
+----
+
+== Test Application
+
+image::exc2-test-app.jpg[alt]
+
+== Deployment
+
+* Deployment descriptor - `mta.yaml`
+** Right click on `mta.yaml` and choose build MTA
+
+image::exc2-build-app.jpg[build-app]
+
+* After succesfull build a new directory `mta_archives` is created with our mtar archive
+
+image::exc2-deploy-mtar.jpg[deploy-mtar]
+
+* A popup on the top of the window will appear and you will have to log into your cloud foundry account
+
+image::exc2-deploy-01.jpg[deploy-01]
+
+image::exc2-deploy-02.jpg[deploy-02]
+
+image::exc2-deploy-03.jpg[deploy-03]

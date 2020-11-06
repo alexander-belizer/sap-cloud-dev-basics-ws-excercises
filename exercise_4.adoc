@@ -1,0 +1,227 @@
+= Excercise 4: Extend application using previously build Service
+include::cfg/common_adoc/header.adoc[]
+
+== Objectives
+
+* Add the Ratings service to the application
+* Add the Rating view
+* Redeploy the application
+
+== Add the new Ratings service 
+
+* We have to
+** create a new Destination for the model
+** change the dev space
+** Add the model to the application
+
+== New destination
+
+image::exc4-destination-ratings.png[destination-ratings]
+
+== Change the dev space
+
+* Our dev space from previous excercise has to be stopped and we need to start 
+
+image::exc4-change-dev-space.png[change-dev-space]
+
+* Destination configuration
+
+|===
+|Name           |Ratings
+|Type           |HTTP
+|Description    |Rating service
+|URL            |https://ratings-srv-srv-busy-oribi-wz.cfapps.eu10.hana.ondemand.com/ (URL of your service from previous exercise)
+|Proxy Type     |Internet
+|Authentication |NoAuthentication
+|===
+
+* Add parameters
+
+|===
+|HTML5.DynamicDestination	|true
+|WebIDEEnabled				|true
+|WebIDESystem				|Ratings
+|WebIDEUsage				|odata_gen
+|===
+
+== Add the Ratings model
+
+* Changes in manifest.json
+** Datasources
+
+[source,json]
+----
+"ratingsService": {
+    "uri": "Ratings/ratings/",
+    "type": "OData",
+    "settings": {
+        "odataVersion": "4.0"
+    }
+} 
+----
+
+** Models
+
+[source,json]
+----
+"ratings": {
+    "dataSource": "ratingsService",
+    "settings": {
+        "synchronizationMode" : "None",
+        "updateGroupId" : "myAppUpdateGroup"
+    }
+}
+----
+
+== Add the Ratings model
+
+* Changes in xs-app.json
+** Add new route
+
+[source,json]
+----
+{
+    "authenticationType": "none",
+    "csrfProtection": false,
+    "source": "^/Ratings/(.*)$",
+    "destination": "Ratings",
+    "target": "$1"
+}
+----
+
+== Change in Reviews tab
+
+* Changes in IconTabFilter "Reviews"
+
+[source,xml]
+----
+<IconTabFilter text="Reviews" id="filter2">
+    <content>    
+    .. // <1>
+    </content>
+</IconTabFilter>    
+----
+<1> Add code here
+
+* Add form and table
+
+[source,xml]
+----
+<form:Form id="FormRatings"
+    editable="false">
+    <form:layout>
+        <form:ResponsiveGridLayout
+            labelSpanXL="1"
+            labelSpanL="1"
+            labelSpanM="1"
+            labelSpanS="2"
+            adjustLabelSpan="false"
+            emptySpanXL="0"
+            emptySpanL="0"
+            emptySpanM="0"
+            emptySpanS="0"
+            columnsXL="2"
+            columnsL="2"
+            columnsM="1"
+            singleContainerFullSize="false" />
+    </form:layout>
+    <form:formContainers>
+        <form:FormContainer>
+            <form:formElements>
+                <form:FormElement label="5 stars">
+                    <form:fields>
+                        <ProgressIndicator class="sapUiSmallMarginBottom" percentValue="{ratings>star5Perc}" showValue="true" state="Warning" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="4 stars">
+                    <form:fields>
+                        <ProgressIndicator class="sapUiSmallMarginBottom" percentValue="{ratings>star4Perc}" showValue="true" state="Warning" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="3 stars">
+                    <form:fields>
+                        <ProgressIndicator class="sapUiSmallMarginBottom" percentValue="{ratings>star3Perc}" showValue="true" state="Warning" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="2 stars">
+                    <form:fields>
+                        <ProgressIndicator class="sapUiSmallMarginBottom" percentValue="{ratings>star2Perc}" showValue="true" state="Warning" />
+                    </form:fields>
+                </form:FormElement>
+                <form:FormElement label="1 stars">
+                    <form:fields>
+                        <ProgressIndicator class="sapUiSmallMarginBottom" percentValue="{ratings>star1Perc}" showValue="true" state="Warning" />
+                    </form:fields>
+                </form:FormElement>
+            </form:formElements>
+        </form:FormContainer>
+    </form:formContainers>
+</form:Form>
+<Table id="lineRatingsList" width="auto" items="{path:'ratings>Ratings'}" noDataText="{i18n>detailLineItemTableNoDataText}" >
+    <headerToolbar>
+        <Toolbar>
+            <Title id="lineItemsTitle1" text="{detailView>/lineItemListTitle}" titleStyle="H3" level="H3"/>
+        <content/>
+        </Toolbar>
+    </headerToolbar>
+    <columns>
+        <Column>
+            <Text text="Name"/>
+        </Column>
+        <Column minScreenWidth="Tablet" demandPopin="true" hAlign="End">
+            <Text text="Rating"/>
+        </Column>
+    </columns>
+    <items>
+        <ColumnListItem>
+            <cells>
+                <ObjectIdentifier title="{ratings>Name}"/>
+                <ObjectIdentifier title="{ratings>Rating}"/>
+            </cells>
+        </ColumnListItem>                                     
+    </items>
+</Table>                        
+----
+
+== Change in Details controller
+
+* Method `_onBindingChange`
+
+[source,js]
+----
+var sRatingsPath = "ratings>/ProductRatings(" + sObjectId + ")",
+    oForm = this.byId("FormRatings"),
+    oTable = this.byId("lineRatingsList");
+
+oForm.bindElement(sRatingsPath);
+
+oTable.bindElement({path : sRatingsPath, parameters : {$expand : 'Ratings'}});
+----
+
+== Test Configuration
+
+* we need to bind the new service
+
+image::exc4-bind-dervice.png[bind-dervice]
+
+== Redeploy the app
+
+* Change the version in package.json
+
+[source,json]
+----
+"version": "0.0.2"
+----
+
+* Change the version in mta-yaml to `version: 0.0.2`
+
+* Build mta archive
+** Right click on `mta.yaml` and click Build MTA
+** after build multiple versions 
+
+image::exc4-mta-versions.png[mta-versions]
+
+* Deploy the App
+** Right click on the `DemoApp_0.0.2.mtar` and Run Deploy MTA Archive
+
+link:https://a40506c3trial-dev-demoapp-approuter.cfapps.eu10.hana.ondemand.com/nsDemoApp/index.html[https://a40506c3trial-dev-demoapp-approuter.cfapps.eu10.hana.ondemand.com/nsDemoApp/index.html]

@@ -1,0 +1,7 @@
+// attribute _lang_ determines translations for constants like Figures, Tables, chanpters etc.
+// all relevant files are added to header.adoc 
+:lang: en
+include::global_header.adoc[]
+// include::../cfg/_attrib_trans/attributes.adoc[]
+:imagesdir: img/
+// :source-highlighter: highlightjs
