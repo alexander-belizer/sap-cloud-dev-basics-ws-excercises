@@ -3,15 +3,15 @@ include::cfg/common_adoc/header.adoc[]
 
 == Objectives
 
-* Create an simple service 
+* Create a simple service 
 * Add mock data
 * Test the service 
 * Test and Deploy the service
-* We will use the CDS and CF CLI
+* Learn to use CDS-Views and the Cloud Foundry CLI
 
 == Change dev space
 
-* Start the cds dev Space
+* Start the "cds" dev Space
 
 == Create a new Application `ratings-srv`
 
@@ -33,7 +33,7 @@ image::exc3-create-project-terminal.png[create-project-terminal]
 
 image::exc3-bas-folder-structure.png[bas-folder-structure]
 
-== Step 1 - Create new schema
+== Create new schema
 
 * We will create a 2 entities - Ratings and ProductRatings
 * In DB Folder create a new file `schema.cds`
@@ -63,7 +63,7 @@ entity ProductRatings {
 }
 ----
 
-== Step 2 - Create a new service
+== Create a new service
 
 * In srv folder create a new file `ratings-service.cds`
 * We will use the previosly created entities from the `schema.cds` file - Ratings and Product Ratings
@@ -205,7 +205,7 @@ image::exc3-product-ratings-1-expand-test-1.png[product-ratings-1-expand-test-1]
 == Deployment 
 
 * To deploy the service we have to modify our `package.json` file and run some commands in terminal
-* Add to `package.json` file
+* Add following to `package.json` file
 
 [source,json]
 ----
@@ -225,17 +225,21 @@ image::exc3-product-ratings-1-expand-test-1.png[product-ratings-1-expand-test-1]
 
 image::exc3-terminal-cf-login.png[terminal-cf-login]
 
-* Now we need to create the HANA service
-** run `cf create-service hanatrial hdi-shared ratings-srv-db`
-** run `cds build --production`
-** run `cf push -f gen/db`
-** run `cf push -f gen/srv --random-route`
+* Create the HANA service by running following commands:
+[source,bash]
+----
+ cf create-service hanatrial hdi-shared ratings-srv-db
+ cds build --production
+ cf push -f gen/db
+ cf push -f gen/srv --random-route
+----
 
 * This will take some minutes
-** After succesfull deployement you will get the address of your service
+
+* After succesfull deployment you will get the address of your service
 
 image::exc3-service-deployed.png[service-deployed]
 
-* And you can test the service in browser
+* Test the service in browser
 
-image::exc3-ratings-serv-test-2.png[ratings-serv-test-2] 
+image::exc3-ratings-serv-test-2.png[ratings-serv-test-2]

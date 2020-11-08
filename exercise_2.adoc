@@ -7,88 +7,57 @@ include::cfg/common_adoc/header.adoc[]
 * Create a run configuration & run the app
 * Change the app
 
-== Step 1 
+== Create a new project from template
 
-* Create a new project from template
-* In Business Application Studo go to Help / Welcome Page
-* Choose Start / Create Project from template
+* In Business Application Studo go to Help -> Welcome Page
+* Choose Start -> Create Project from template
 
 image::exc2-step1.jpg[alt]
 
-== Step 2
-
-* New Project from template wizzard
-- Choose SAP Fiori Freestyle Project
+* Choose SAP Fiori Freestyle Project
 
 image::exc2-step2.jpg[alt]
 
-== Step 3
-
-* New Project from template wizzard
-- Choose SAP Fiori Master-Detail Application
+* Choose SAP Fiori Master-Detail Application
 
 image::exc2-step3.jpg[alt]
 
-== Step 4
-
-* New Project from template wizzard
-- Give in Project Name
+* Give in Project Name
 
 image:exc2-step4.jpg[alt]
 
-== Step 5
-
-* New Project from template wizzard
-- Choose Standalone Approuter as HTML5 Application Runtime
+* Choose Standalone Approuter as HTML5 Application Runtime
 
 image::exc2-step5.jpg[alt]
 
-== Step 6
-
-* New Project from template wizzard
-- Basic Attributes 
-- Leave default values  
+* Basic Attributes -> Leave default values  
 
 image::exc2-step6.jpg[alt]
 
-
-== Step 7
-
-* New Project from template wizzard
-- Add title
-- Leave default values
+* Add title -> Leave default values
 
 image::exc2-step7.jpg[alt]
 
-== Step 8
-
-* New Project from template wizzard
-- Choose My SAP Systems as system
-- Choose Northwind as source
+* Choose My SAP Systems as system
+* Choose Northwind as source
 
 image::exc2-step8.jpg[alt]
+
 image::exc2-step8-1.jpg[alt]
 
-== Step 9
-
-* New Project from template wizzard
-
 image::exc2-step9.jpg[alt]
+
 image::exc2-step9-1.jpg[alt]
 
-== Step 10
-
-* New Project from template wizzard
-- Choose Open in New Workspace 
+* Choose Open in New Workspace 
 
 image:exc2-step10.jpg[alt]
 
-== Run Configuration
+= Add Run Configuration
 
-* New Project from template wizzard
-- Accept default values
-- Bind the Northwind Service
-- Click Run
+* Accept default values
+* Bind the Northwind Service
+* Click Run
 
 image::exc2-step11.jpg[alt]
 image::exc2-step11-1.jpg[alt]
@@ -99,8 +68,7 @@ image::exc2-step11-1.jpg[alt]
 
 image::exc2-step12.jpg[alt]
 
-* We have to change a few things -
-** Say something about GIT
+* We have to change a few things
 ** Descriptions using i18n model
 ** We will add expand to the Products entity in our OData model
 ** We will adjust currency and unit of measure fields 
@@ -112,22 +80,33 @@ image::exc2-step12.jpg[alt]
 Git is a distributed version-control system for tracking changes in source code during software development. It is designed for coordinating work among programmers, but it can be used to track changes in any set of files. Its goals include speed, data integrity, and support for distributed, non-linear workflows.
 
 
-* GIT config
+* Modify GIT config
+[source,bash]
+----
+git config --global user.email "you@example.com"
+git config --global user.name "name surname" 
+----
 
-`git config --global user.email "you@example.com"`
+* Stage changes
 
-`git config --global user.name "name surname"` 
+[source,bash]
+----
+git add *
+----
 
-- Stage changes
-- Add Comment
-- Commit
+* Commit with  Comment
 
-== Changes - i18n 
+[source,bash]
+----
+git commit -m "initial commit"
+----
 
-- i18n stands for internationalization
-- Model used to store translations 
-- SAPUI5 - Resource model in manifest.json
-- Loaded automatically according to locale settings or Url parameters
+== Change i18n 
+
+* i18n stands for internationalization
+* Model used to store translations 
+* SAPUI5 - Resource model in `manifest.json`
+* Loaded automatically according to locale settings or Url parameters
 
 link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/]
 
@@ -146,9 +125,9 @@ link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[https://inui.i
 1. Price Unit
 2. Expand Category, Supplier in Controller
 
-== 1. Price Unit
+== Price Unit
 
-- Change numberUnit to USD in ObjectListItem
+* Change value of attribute `numberUnit`  to "USD" in eleme ObjectListItem
 
 [source,xml]
 ----
@@ -164,7 +143,7 @@ link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[https://inui.i
         numberUnit="USD">
 ----
 
-== 2. Expand Category, Supplier in Controller
+== Expand Category, Supplier in Controller
 
 Add parameters object into List tag
 
@@ -185,9 +164,6 @@ Add parameters object into List tag
     }"...>
 ----
 
-
-
-
 == Changes Detail View
 
 1. Add IconTabBar in <semantic:Content>
@@ -197,9 +173,9 @@ Add parameters object into List tag
 5. Add Forms in IconTabFilter Details 
 6. Add Header Content
 
-== 1. Add IconTabBar
+== Add IconTabBar
 
-- Add IconTabBar into semantic:content
+* Add IconTabBar into semantic:content
 
 [source,xml]
 ----
@@ -230,20 +206,21 @@ Add parameters object into List tag
 </IconTabBar> 
 ----
 
-== 2. Move Table
+== Move Table
 
-- Move Table into 
+* Move Table into 
 
 [source,xml]
 ----
 <IconTabFilter text="Orders"   id="filter3">
     <content>
-        ..                      
+        ..              // <1>        
     </content>
 </IconTabFilter>
 ----
+<1> add Table here
 
-- Table
+* Table
 
 [source,xml]
 ----
@@ -292,18 +269,19 @@ Add parameters object into List tag
 </Table>
 ----
 
-== 3. Change table
+== Change table
 
 * Change displayed Units
 ** Search in `<Table> <items>` the element `<ObjectNumber>` and change the binding for unit from `unit="{Quantity}"` to `unit="Units"`
 ** Search in `<Table> <items>` the element `<ObjectIdentifier` and delete the binding for text `text="{OrderID}"`
 
 
-== 4. Add namespace
+== Add namespace
 
-- Add xmlns:form="sap.ui.layout.form
+* Add namespace `xmlns:form="sap.ui.layout.form`
 
 [source,xml]
+----
 <mvc:View
 	controllerName="ns.HTML5Module.controller.Detail"
 	xmlns="sap.m"
@@ -311,20 +289,25 @@ Add parameters object into List tag
 	xmlns:footerbar="sap.ushell.ui.footerbar"
 	xmlns:mvc="sap.ui.core.mvc"
     xmlns:form="sap.ui.layout.form">
+----
 
 == 5. Add Forms 
 
-- Add into IconTabBar Filter
+* Add into IconTabBar Filter
+
 [source,xml]
-<IconTabFilter text="Details"   id="filter5">
+----
+<IconTabFilter text="Details" id="filter5">
     <content>
         ..
     </content>
 </IconTabFilter>    
+----
 
-- Forms
+* Forms
 
 [source,xml]
+----
 <form:Form id="FormDetails"
     editable="false">                              
     <form:layout>
@@ -370,7 +353,7 @@ Add parameters object into List tag
                     <form:fields>
                         <Text text="{ReorderLevel}" />
                     </form:fields>
-                </form:FormElement>                                                                                                                             
+                </form:FormElement>                                    
             </form:formElements>
         </form:FormContainer>                                
         <form:FormContainer title="Supplier">
@@ -399,22 +382,25 @@ Add parameters object into List tag
         </form:FormContainer>
     </form:formContainers>                                
 </form:Form>
+----
 
-== 6. Add Header Content
+== Add header content
 
-- in semantic:headerContent add ObjectHeader
+- in `semantic:headerContent` add element `ObjectHeader`
 
 [source,xml]
+----
 <ObjectHeader 
     icon="{path: 'Category/Picture', formatter: '.formatter.formatPicture' }"
     title="{Category/CategoryName}">
 </ObjectHeader> 
+----
 
 == Add formatter function 
 
 * formatter: '.formatter.formatPicture'
 
-[source,js]
+[source,javascript]
 ----
 formatPicture : function (sValue) {
     if (sValue) {

@@ -17,4 +17,8 @@ param(
 # Make this relative?
 #asciidoctor-pdf $adoc_file_name -a pdf-style=C:\_data\#sync\adocs\_themes\emineo-theme.yml
 # asciidoctor-pdf $adoc_file_name -a pdf-style=C:\_data\adocs\_cfg\themes\emineo-theme.yml
-asciidoctor-pdf $adoc_file_name -a pdf-style=..\cfg\themes\emineo-theme.yml
+# asciidoctor-pdf $adoc_file_name -a pdf-style=cfg\themes\emineo-theme.yml -a pdf-fontsdir=cfg\themes\fonts
+
+$trg_file_path ="build\" + $adoc_file_name.Substring(0,$adoc_file_name.LastIndexOf('.')) + ".pdf"
+
+asciidoctor-pdf $adoc_file_name -a pdf-style=cfg\themes\emineo-theme.yml -a pdf-fontsdir=cfg\themes\fonts -o $trg_file_path

@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@asciidoctor/core": "^2.2.0",
+    "asciidoctor-pdf": "^1.0.0-alpha.10"
+  }
+}

@@ -2,29 +2,29 @@ font:
   catalog:
     # Noto Serif supports Latin, Latin-1 Supplement, Latin Extended-A, Greek, Cyrillic, Vietnamese & an assortment of symbols
     Noto Serif:
-      normal: notoserif-regular-subset.ttf
-      bold: notoserif-bold-subset.ttf
-      italic: notoserif-italic-subset.ttf
-      bold_italic: notoserif-bold_italic-subset.ttf
+      normal: noto-serif-regular.ttf
+      bold: noto-serif-bold.ttf
+      italic: noto-serif-italic.ttf
+      bold_italic: noto-serif-bold_italic.ttf
 
     # Downloaded from googlefonts
     Muli:
-      normal: C:/_data/adocs/_cfg/fonts/Muli-Regular.ttf
-      bold: C:/_data/adocs/_cfg/fonts/Muli-Bold.ttf
-      italic: C:/_data/adocs/_cfg/fonts/Muli-RegularItalic.ttf
-      bold_italic: C:/_data/adocs/_cfg/fonts/Muli-BoldItalic.ttf
+      normal: muli-regular.ttf
+      bold: muli-bold.ttf
+      italic: muli-regular_italic.ttf
+      bold_italic: muli-bold_italic.ttf
     # Downloaded from windows
     Arial:
-      normal: C:/_data/adocs/_cfg/fonts/arial.ttf
-      bold: C:/_data/adocs/_cfg/fonts/arialbd.ttf
-      italic: C:/_data/adocs/_cfg/fonts/ariali.ttf
-      bold_italic: C:/_data/adocs/_cfg/fonts/arialbi.ttf
+      normal: arial.ttf
+      bold: arialbd.ttf
+      italic: ariali.ttf
+      bold_italic: arialbi.ttf
     # M+ 1mn supports ASCII and the circled numbers used for conums
     FiraCode:
-      normal: mplus1mn-regular-ascii-conums.ttf
-      bold: mplus1mn-bold-ascii.ttf
-      italic: mplus1mn-italic-ascii.ttf
-      bold_italic: mplus1mn-bold_italic-ascii.ttf
+      normal: RobotoMono-Regular.ttf
+      bold: RobotoMono-Bold.ttf
+      italic: RobotoMono-Italic.ttf
+      bold_italic: RobotoMono-BoldItalic.ttf
     #      normal: C:/_data/adocs/_cfg/fonts/FiraCode-Regular.ttf
     #      bold: C:/_data/adocs/_cfg/fonts/FiraCode-Bold.ttf
     #      italic: C:/_data/adocs/_cfg/fonts/FiraCode-Regular.ttf
@@ -32,10 +32,10 @@ font:
     # M+ 1p supports Latin, Latin-1 Supplement, Latin Extended, Greek, Cyrillic, Vietnamese, Japanese & an assortment of symbols
     # It also provides arrows for ->, <-, => and <= replacements in case these glyphs are missing from font
     FiraCode Fallback:
-      normal: mplus1p-regular-fallback.ttf
-      bold: mplus1p-regular-fallback.ttf
-      italic: mplus1p-regular-fallback.ttf
-      bold_italic: mplus1p-regular-fallback.ttf
+      normal: Inconsolata-Regular.ttf
+      bold: Inconsolata-Regular.ttf
+      italic: Inconsolata-Regular.ttf
+      bold_italic: Inconsolata-Regular.ttf
   #      normal: C:/_data/adocs/_cfg/fonts/FiraCode-Regular.ttf
   #      bold: C:/_data/adocs/_cfg/fonts/FiraCode-Bold.ttf
   #      italic: C:/_data/adocs/_cfg/fonts/FiraCode-Regular.ttf
@@ -138,7 +138,7 @@ title_page:
   logo:
     #NOTE(alex): add css image, aligh it on the Right Side and on Top of page
     # image: image:C:\_data\adocs\_cfg\logos\emi_logo.png[pdfwidth=25%]
-    image: image:C:\_data\adocs\_cfg\logos\emineo_logo_claim_de_rgb_300px.png[pdfwidth=25%]
+    image: image:.\logos\emineo_logo_claim_de_rgb_300px.png[pdfwidth=25%]
     align: right
     top: 0%
   title:

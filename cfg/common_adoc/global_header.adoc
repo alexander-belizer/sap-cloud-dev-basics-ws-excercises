@@ -40,9 +40,11 @@ and I like last-update-label! better 😁
 // :source-highlighter: highlightjs
 //
 // ifdef::pygments-available[]
-:source-highlighter: pygments
-:pygments-style: manni
-:pygments-linenums-mode: table
+:source-highlighter: rouge
+:rouge-style: gruvbox.light
+// :source-highlighter: pygments
+// :pygments-style: manni
+// :pygments-linenums-mode: table
 // endif::[]
 //
 //:source-linenums-option: table
