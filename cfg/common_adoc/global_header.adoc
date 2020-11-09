@@ -41,7 +41,7 @@ and I like last-update-label! better 😁
 //
 // ifdef::pygments-available[]
 :source-highlighter: rouge
-:rouge-style: gruvbox.light
+:rouge-style: pastie
 // :source-highlighter: pygments
 // :pygments-style: manni
 // :pygments-linenums-mode: table
@@ -91,3 +91,4 @@ include::attributes/attributes.adoc[]
 //
 // Remove Chapter Labels
 :chapter-label:
+:chapter-signifier:

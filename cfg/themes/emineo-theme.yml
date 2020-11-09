@@ -21,10 +21,14 @@ font:
       bold_italic: arialbi.ttf
     # M+ 1mn supports ASCII and the circled numbers used for conums
     FiraCode:
-      normal: RobotoMono-Regular.ttf
-      bold: RobotoMono-Bold.ttf
-      italic: RobotoMono-Italic.ttf
-      bold_italic: RobotoMono-BoldItalic.ttf
+      normal: mplus1p-regular.ttf
+      bold: mplus1p-bold.ttf
+      italic: mplus1p-regular.ttf
+      bold_italic: mplus1p-bold.ttf
+      # normal: RobotoMono-Regular.ttf
+      # bold: RobotoMono-Bold.ttf
+      # italic: RobotoMono-Italic.ttf
+      # bold_italic: RobotoMono-BoldItalic.ttf
     #      normal: C:/_data/adocs/_cfg/fonts/FiraCode-Regular.ttf
     #      bold: C:/_data/adocs/_cfg/fonts/FiraCode-Bold.ttf
     #      italic: C:/_data/adocs/_cfg/fonts/FiraCode-Regular.ttf

@@ -3,11 +3,12 @@ include::cfg/common_adoc/header.adoc[]
 
 == Objectives
 
-* Create a simple app with `Master - Detail wizard`
-* Create a run configuration & run the app
-* Change the app
+* Create a simple app with *Master - Detail wizard*
+* Create a *run configuration* & run the app
+* Setup local *git* repository
+* Extend the app
 
-== Create a new project from template
+== Create new project from template
 
 * In Business Application Studo go to Help -> Welcome Page
 * Choose Start -> Create Project from template
@@ -24,7 +25,7 @@ image::exc2-step3.jpg[alt]
 
 * Give in Project Name
 
-image:exc2-step4.jpg[alt]
+image::exc2-step4.jpg[alt]
 
 * Choose Standalone Approuter as HTML5 Application Runtime
 
@@ -51,9 +52,9 @@ image::exc2-step9-1.jpg[alt]
 
 * Choose Open in New Workspace 
 
-image:exc2-step10.jpg[alt]
+image::exc2-step10.jpg[alt]
 
-= Add Run Configuration
+== Add Run Configuration
 
 * Accept default values
 * Bind the Northwind Service
@@ -62,57 +63,60 @@ image:exc2-step10.jpg[alt]
 image::exc2-step11.jpg[alt]
 image::exc2-step11-1.jpg[alt]
 
+== Setup local Git
+
+IMPORTANT: Git is a distributed version-control system for tracking changes in source code during software development. It is designed for coordinating work among programmers, but it can be used to track changes in any set of files. Its goals include speed, data integrity, and support for distributed, non-linear workflows. For further information please consult https://git-scm.com/[git homepage]
+
+.Initialize git repository and commit initial application structure
+[source,console]
+----
+$ git config --global user.email "you@example.com" // <1>
+$ git config --global user.name "name surname" // <2>
+$ git add * // <3>
+$ git commit -m "initial commit" // <4>
+----
+<1> Modify git config -> set user email
+<2> Modify git config -> set user name
+<3> Stage changes
+<4> Commit with comment
+
+Since we didn't yet setup global git repository there is no need to `push` our changes, or to create `pull request`.
+
 == The app
 
-* Now we have a running app
+Now we have a running app
 
 image::exc2-step12.jpg[alt]
 
-* We have to change a few things
-** Descriptions using i18n model
-** We will add expand to the Products entity in our OData model
-** We will adjust currency and unit of measure fields 
-** We will add some components - IconTabFilter, Form
-** We will display a picture from OData servis and create a formatter function
+We need to make following changes:
 
-=== What is GIT
+* Descriptions using i18n model
+* Extend "Products"  entity in OData model by additionad data via `expand` functionality
+* Adjust currency and unit of measure fields
+* Add additional UI components (IconTabFilter, Form)
+* Display a picture from OData service and create a formatter function
 
-Git is a distributed version-control system for tracking changes in source code during software development. It is designed for coordinating work among programmers, but it can be used to track changes in any set of files. Its goals include speed, data integrity, and support for distributed, non-linear workflows.
+== Internationalization 
 
+[IMPORTANT]
+====
+SAPUI5 uses i18n as model for internationalization (i18n stands for internationalization). 
+Key features of i18n Model in SAPUI5:
 
-* Modify GIT config
-[source,bash]
-----
-git config --global user.email "you@example.com"
-git config --global user.name "name surname" 
-----
-
-* Stage changes
-
-[source,bash]
-----
-git add *
-----
-
-* Commit with  Comment
-
-[source,bash]
-----
-git commit -m "initial commit"
-----
-
-== Change i18n 
-
-* i18n stands for internationalization
 * Model used to store translations 
-* SAPUI5 - Resource model in `manifest.json`
-* Loaded automatically according to locale settings or Url parameters
+* SAPUI5 - Resource model is defined in `manifest.json`
+* Translations are loaded automatically according to locale settings *or* Url parameters
 
-link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/]
+For further details please consult link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[Ultimate guide to internationalization @ inui.io]
+====
 
-*Change the texts in `i18n.properties`
+Find file `i18n.properties` and change corresponding values.
 
+.i18n.properties
+[options=header,cols="50,50a"]
 |===
+|Property name                      |Value 
+//-----------------------------------------------------------
 |masterTitleCount                   |Products 
 |detailLineItemTableNoDataText      |No OrderDetails 
 |detailLineItemTableHeading         |Order Details 
@@ -121,14 +125,11 @@ link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[https://inui.i
 |detailLineItemTableUnitNumberColumn|Quantity
 |===
 
-== Changes Master View
-1. Price Unit
-2. Expand Category, Supplier in Controller
+== Change Price Unit in MasterView
 
-== Price Unit
+Change value of attribute `numberUnit`  to "USD" in element `ObjectListItem`
 
-* Change value of attribute `numberUnit`  to "USD" in eleme ObjectListItem
-
+.Element Items
 [source,xml]
 ----
 <items>
@@ -143,7 +144,7 @@ link:https://inui.io/sap-ui5-ultimate-guide-internalization-i18n/[https://inui.i
         numberUnit="USD">
 ----
 
-== Expand Category, Supplier in Controller
+== Expand Category and Supplier in Controller
 
 Add parameters object into List tag
 
@@ -155,50 +156,40 @@ Add parameters object into List tag
     class="sapFDynamicPageAlignContent"
     items="{
         path: '/Products',
-        sorter: {
-            path: 'ProductName',
-            descending: false
-        },
+        sorter: {path: 'ProductName',descending: false},
         groupHeaderFactory: '.createGroupHeader',
         parameters: {expand:'Category,Supplier'}
     }"...>
 ----
 
-== Changes Detail View
+== Make some improvements to DetailView 
+=== Change View to Tabbed Layout
+==== Add IconTabBar
 
-1. Add IconTabBar in <semantic:Content>
-2. Move Table to IconTabFilter Orders
-3. Change Table
-4. Add namespace
-5. Add Forms in IconTabFilter Details 
-6. Add Header Content
+Insert object `IconTabBar` into element `semantic:content`
 
-== Add IconTabBar
-
-* Add IconTabBar into semantic:content
-
+.Element `semantic:content`
 [source,xml]
 ----
 <semantic:content>
-    ..
+    <!-- insert here --> 
 </semantic:content>
 ----
 
-- IconTabBar
-
+.Source code `IconTabBar`
 [source,xml]
 ----
 <IconTabBar selectedKey="__filter2" id="bar0">
     <items>
-        <IconTabFilter text="Details"   id="filter5">
+        <IconTabFilter text="Details" id="filter5">
             <content>
             </content>
         </IconTabFilter>
-        <IconTabFilter text="Orders"   id="filter3">
+        <IconTabFilter text="Orders" id="filter3">
             <content>                       
             </content>
         </IconTabFilter>                    
-        <IconTabFilter text="Rating"  id="filter4">
+        <IconTabFilter text="Rating" id="filter4">
             <content>
             </content>
         </IconTabFilter>       
@@ -206,22 +197,21 @@ Add parameters object into List tag
 </IconTabBar> 
 ----
 
-== Move Table
+==== Move Table into specific tab
 
-* Move Table into 
+Move `ItemsList` Table into content of `IconTabFilter`
 
+.IconTabFilter
 [source,xml]
 ----
-<IconTabFilter text="Orders"   id="filter3">
+<IconTabFilter text="Orders" id="filter3">
     <content>
-        ..              // <1>        
+        <!-- insert here -->                 
     </content>
 </IconTabFilter>
 ----
-<1> add Table here
 
-* Table
-
+.ItemsList Table
 [source,xml]
 ----
 <Table
@@ -244,24 +234,18 @@ Add parameters object into List tag
         <Column>
             <Text text="{i18n>detailLineItemTableIDColumn}"/>
         </Column>
-        <Column
-            minScreenWidth="Tablet"
-            demandPopin="true"
-            hAlign="End">
+        <Column 
+            minScreenWidth="Tablet" 
+            demandPopin="true" hAlign="End">
             <Text text="{i18n>detailLineItemTableUnitNumberColumn}"/>
         </Column>
     </columns>
     <items>
         <ColumnListItem>
             <cells>
-                <ObjectIdentifier
-                    title="{OrderID}"
-                    />
+                <ObjectIdentifier title="{OrderID}"/>
                 <ObjectNumber
-                    number="{
-                        path: 'Quantity',
-                        formatter: '.formatter.currencyValue'
-                    }"
+                    number="{path: 'Quantity',formatter: '.formatter.currencyValue'}"
                     unit="Units"/>
             </cells>
         </ColumnListItem>
@@ -269,17 +253,19 @@ Add parameters object into List tag
 </Table>
 ----
 
-== Change table
+=== Modify display properties of table 
 
-* Change displayed Units
-** Search in `<Table> <items>` the element `<ObjectNumber>` and change the binding for unit from `unit="{Quantity}"` to `unit="Units"`
-** Search in `<Table> <items>` the element `<ObjectIdentifier` and delete the binding for text `text="{OrderID}"`
+Change displayed Units as follows:
 
+* Search in `<Table> <items>` for element `<ObjectNumber>` and change the binding for unit from `unit="{Quantity}"` to `unit="Units"`
+* Search in `<Table> <items>` for element `<ObjectIdentifier>` and delete the binding for text `text="{OrderID}"`
 
-== Add namespace
+=== Add Details as Form to Page 
 
-* Add namespace `xmlns:form="sap.ui.layout.form`
+In order to use `Form` element in View we need to introduce corresponding namespace.
+Add namespace `xmlns:form="sap.ui.layout.form` to `View`
 
+.Definition of View
 [source,xml]
 ----
 <mvc:View
@@ -291,25 +277,22 @@ Add parameters object into List tag
     xmlns:form="sap.ui.layout.form">
 ----
 
-== 5. Add Forms 
+Find element `IconTabFilter` and insert code below.
 
-* Add into IconTabBar Filter
-
+.Definition `IconTabFilter`
 [source,xml]
 ----
 <IconTabFilter text="Details" id="filter5">
     <content>
-        ..
+        <!-- insert here -->
     </content>
 </IconTabFilter>    
 ----
 
-* Forms
-
+.Definition FormDetails
 [source,xml]
 ----
-<form:Form id="FormDetails"
-    editable="false">                              
+<form:Form id="FormDetails" editable="false">                              
     <form:layout>
         <form:ResponsiveGridLayout
             labelSpanXL="4"
@@ -384,24 +367,33 @@ Add parameters object into List tag
 </form:Form>
 ----
 
-== Add header content
+=== Display picture in header
 
-- in `semantic:headerContent` add element `ObjectHeader`
+Add element `ObjectHeader` to `semantic:headerContent`.
 
+IMPORTANT: Because Northwind encodes image data in particular way, 
+we need to introduce a formatter-function via property `formatter`.
+
+.Definition `ObjectHeader`
 [source,xml]
 ----
 <ObjectHeader 
-    icon="{path: 'Category/Picture', formatter: '.formatter.formatPicture' }"
+    icon="{
+            path: 'Category/Picture', 
+            formatter: '.formatter.formatPicture'
+        }"
     title="{Category/CategoryName}">
 </ObjectHeader> 
 ----
 
-== Add formatter function 
+In order to define formatter function 
+create `formatter.js` file in your `WebContent/model` folder with following content.
 
-* formatter: '.formatter.formatPicture'
-
+.Implementation '.formatter.formatPicture'
 [source,javascript]
 ----
+// this special formatter is needed 
+// because Northwind service encodes image data in particular way 
 formatPicture : function (sValue) {
     if (sValue) {
         var sTrimmedData = sValue.substr(104);
@@ -410,22 +402,23 @@ formatPicture : function (sValue) {
 }
 ----
 
-== Test Application
+== Test application
 
 image::exc2-test-app.jpg[alt]
 
-== Deployment
+== Build applicaiton and deploy to cloud
 
-* Deployment descriptor - `mta.yaml`
-** Right click on `mta.yaml` and choose build MTA
+TIP: File `mta.yaml` is a *deployment descriptor*.
+
+Right click on `mta.yaml` and choose build MTA.
 
 image::exc2-build-app.jpg[build-app]
 
-* After succesfull build a new directory `mta_archives` is created with our mtar archive
+After succesfull build a new directory `mta_archives` is created with our mtar archive
 
 image::exc2-deploy-mtar.jpg[deploy-mtar]
 
-* A popup on the top of the window will appear and you will have to log into your cloud foundry account
+A popup on the top of the window will appear and you will have to log into your cloud foundry account
 
 image::exc2-deploy-01.jpg[deploy-01]
 
