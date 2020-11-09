@@ -3,42 +3,55 @@ include::cfg/common_adoc/header.adoc[]
 
 == Objectives
 
-* Create a simple service 
+* Create a simple service application 
 * Add mock data
-* Test the service 
-* Test and Deploy the service
 * Learn to use CDS-Views and the Cloud Foundry CLI
+* Test the service
+* Deploy and verify the service
 
-== Change dev space
+== Implementation
+=== Service Definition
+We want to add ratings view (1 to 5 Star) for specified products.
+Ratings shall be aggregated as percentage of all ratings and displayed as barchart. 
+The data for this functionality will be persisted in Hana-DB instance of the cloud.
 
-* Start the "cds" dev Space
+=== Change dev space
 
-== Create a new Application `ratings-srv`
+Since we need access to CDS toolchain we want to use "cds" dev space.
 
-* Create New Folder `ratings-srv`
-* Open New Terminal
-* Type `cd ratings-srv`
-* Type `cds init` 
+=== Create a new application `ratings-srv`
 
-image::exc3-create-project-terminal.png[create-project-terminal]
+Open new terminal in Business Application Studio and execute following commands:
 
-* Run `npm install`
+[source,console]
+----
+$ mkdir ratings-srv
+$ cd ratings-srv
+$ cds init
+----
 
-== Folder structure
+// image::exc3-create-project-terminal.png[create-project-terminal]
 
-* app
-* db
-* srv
-* node_modules
+Install all relevant dependencies
+
+[source,console]
+$ npm install
+
+=== Folder structure
+
+Make sure that following folder structure is generated.
 
 image::exc3-bas-folder-structure.png[bas-folder-structure]
 
-== Create new schema
+=== Create new schema
 
-* We will create a 2 entities - Ratings and ProductRatings
-* In DB Folder create a new file `schema.cds`
-* Copy the code
+Create entities "Ratings" and "ProductRatings".
+Entity "Ratings" contains unique rating record. 
+Entity "ProductRatings" contains composition or Ratinds and supplies aggregated view of all corresponding Ratings as percentage.  
 
+In folder `db` create new file `schema.cds` and paste following code.
+
+.schema.cds
 [source,ddl]
 ----
 namespace db;
@@ -63,29 +76,26 @@ entity ProductRatings {
 }
 ----
 
-== Create a new service
+=== Create new service
 
-* In srv folder create a new file `ratings-service.cds`
-* We will use the previosly created entities from the `schema.cds` file - Ratings and Product Ratings
-* We will run the service under the `/ratings` path with the command `@path : '/ratings'`
-* We will add new properties that we will later calculate at runtime e.g. `star1Perc`
-* Copy the code
+In `srv` folder create a new file `ratings-service.cds` and paste following code.
 
+.ratings-service.cds
 [source,ddl]
 ----
 using {db} from '../db/schema';
 
-@path : '/ratings'
+@path : '/ratings'    // <2>
 
-service RatingsService {
+service RatingsService { // <1> 
 
-    entity Ratings        as projection on db.Ratings;
+    entity Ratings        as projection on db.Ratings; // <3> 
 
-    entity ProductRatings as
+    entity ProductRatings as  // <4>
         select from db.ProductRatings {
             *,
             null as count     : Integer,
-            null as star1Perc : DecimalFloat,
+            null as star1Perc : DecimalFloat, <5>
             null as star2Perc : DecimalFloat,
             null as star3Perc : DecimalFloat,
             null as star4Perc : DecimalFloat,
@@ -93,9 +103,14 @@ service RatingsService {
         };
 }
 ----
+<1> Define service `RatingsService`.
+<2> Serve this service under the path `/ratings`.
+<3> Use previously defined entity `Ratings`.
+<4> Use previously defined entity `ProductRatings`.
+<5> Add "virtual" attributes `star1Perc`, etc.
 
 
-== Test the new service
+=== Test the service
 
 * In terminal run `cds watch`
 
@@ -107,15 +122,14 @@ image::exc3-ratings-srv-landing.png[ratings-srv-landing]
 
 * Add `/ratings/$metadata` at the end of URL to show the metadata 
 
-== Add some mock data
+=== Add mock data
 
 * Mock data can be added with `.csv` files
 * Files have to be named according the Entities with the corresponding namespace 
-* In `db` create the `data` directory
+* In `db` directory create new `data` directory
 * Create files `db.Ratings.csv` and `db.ProductRatings.csv`
 
-* Content of `db.Ratings.csv`
-
+.Content of `db.Ratings.csv`
 [source,csv]
 ----
 RatingID;ProductID;Name;Date;Rating
@@ -133,8 +147,7 @@ RatingID;ProductID;Name;Date;Rating
 12;2;Michele;2020-01-18T17:00:00Z;3
 ----
 
-* Content of `db.ProductRatings.csv`
-
+.Content of `db.ProductRatings.csv`
 [source,csv]
 ----
 ProductID;star1;star2;star3;star4;star5
@@ -142,7 +155,7 @@ ProductID;star1;star2;star3;star4;star5
 2;1;1;3;1;0
 ----
 
-* With `cds watch` still running you will see the service is filled from the 2 files
+* With `cds watch` still running you will see the service is filled with data from the 2 files
 
 image::exc3-cds-watch-csv.png[cds-watch-csv]
 
@@ -150,12 +163,12 @@ image::exc3-cds-watch-csv.png[cds-watch-csv]
 
 image::exc3-product-ratings-1-expand-test.png[product-ratings-1-expand-test]
 
+=== Calculate the `star*Perc` properties
 
-== Calculate the `star*Perc` properties
-
-* Create a new file `ratings-service.js`
+* Create new file `ratings-service.js`
 * Copy the code
 
+.ratings-service.js
 [source,js]
 ----
 const { context } = require("@sap/cds");
@@ -194,19 +207,19 @@ module.exports = cds.service.impl(async (service) => {
 });
 ----
 
-== Test the service
+=== Test the service
 
-* In browser try the path `/ratings/ProductRatings(1)?$expand=Ratings` 
+In browser call path `/ratings/ProductRatings(1)?$expand=Ratings` 
 
 image::exc3-product-ratings-1-expand-test-1.png[product-ratings-1-expand-test-1]
 
-* Out `star*Perc` entities are beying calculated
+Out `star*Perc` entities are being calculated
 
-== Deployment 
+=== Deploy to Cloud Foundry
 
-* To deploy the service we have to modify our `package.json` file and run some commands in terminal
-* Add following to `package.json` file
+In order to deploy runable service add following to `package.json` file:
 
+.package.json
 [source,json]
 ----
   "cds": {
@@ -218,28 +231,30 @@ image::exc3-product-ratings-1-expand-test-1.png[product-ratings-1-expand-test-1]
   }
 ----
 
-* In terminal run:
-** run `npm add @sap/hana-client --save`
-** run `cf login`
-** you should be now logged in your cloud account
+In terminal run:
+
+[source,console]
+----
+$ npm add @sap/hana-client --save
+$ cf login // <1>
+----
+<1> Login with your credentials.
 
 image::exc3-terminal-cf-login.png[terminal-cf-login]
 
 * Create the HANA service by running following commands:
-[source,bash]
+[source,console]
 ----
- cf create-service hanatrial hdi-shared ratings-srv-db
- cds build --production
- cf push -f gen/db
- cf push -f gen/srv --random-route
+$ cf create-service hanatrial hdi-shared ratings-srv-db
+$ cds build --production
+$ cf push -f gen/db
+$ cf push -f gen/srv --random-route
 ----
 
-* This will take some minutes
-
-* After succesfull deployment you will get the address of your service
+This will take a few minutes. After succesfull deployment you will get the address of your service.
 
 image::exc3-service-deployed.png[service-deployed]
 
-* Test the service in browser
+Now you can test the service in the browser.
 
 image::exc3-ratings-serv-test-2.png[ratings-serv-test-2]

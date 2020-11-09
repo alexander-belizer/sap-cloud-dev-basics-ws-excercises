@@ -3,30 +3,26 @@ include::cfg/common_adoc/header.adoc[]
 
 == Objectives
 
-* Add the Ratings service to the application
+* Extend our application by the newly created Ratings service
 * Add the Rating view
 * Redeploy the application
 
 == Add the new Ratings service 
-
-* We have to
-** create a new Destination for the model
-** change the dev space
-** Add the model to the application
-
-== New destination
+=== Create new destination
 
 image::exc4-destination-ratings.png[destination-ratings]
 
-== Change the dev space
+=== Change the dev space
 
-* Our dev space from previous excercise has to be stopped and we need to start 
+Our dev space from previous excercise has to be stopped and we need to start the `fiori` devspace.
 
 image::exc4-change-dev-space.png[change-dev-space]
 
-* Destination configuration
-
+.Destination configuration
+[options="header",cols="15,85a"]
 |===
+|Attribute      |Value
+// ----------------------------------------------------------
 |Name           |Ratings
 |Type           |HTTP
 |Description    |Rating service
@@ -35,20 +31,23 @@ image::exc4-change-dev-space.png[change-dev-space]
 |Authentication |NoAuthentication
 |===
 
-* Add parameters
 
+.Parameters
+[options="header",cols="50,50"]
 |===
+|Parameter	                |value
+//------------------------------------------
 |HTML5.DynamicDestination	|true
 |WebIDEEnabled				|true
 |WebIDESystem				|Ratings
 |WebIDEUsage				|odata_gen
 |===
 
-== Add the Ratings model
+=== Add the Ratings model `manifest.json`
 
-* Changes in manifest.json
-** Datasources
+Add following code to `manifest.json` under elements `Datasources` and 'Models'.
 
+.manifest.json -> `Datasources`
 [source,json]
 ----
 "ratingsService": {
@@ -60,8 +59,7 @@ image::exc4-change-dev-space.png[change-dev-space]
 } 
 ----
 
-** Models
-
+.manifest.json -> `Models`
 [source,json]
 ----
 "ratings": {
@@ -73,11 +71,11 @@ image::exc4-change-dev-space.png[change-dev-space]
 }
 ----
 
-== Add the Ratings model
+=== Add the Ratings model to `xs-app.json`
 
-* Changes in xs-app.json
-** Add new route
+Add new route to `xs-app.json`.
 
+.xs-app.json
 [source,json]
 ----
 {
@@ -89,22 +87,21 @@ image::exc4-change-dev-space.png[change-dev-space]
 }
 ----
 
-== Change in Reviews tab
+=== Add content to View 
 
-* Changes in IconTabFilter "Reviews"
+In file `View.xml` add `Form` IconTabFilter "Reviews".
 
+.View.xml
 [source,xml]
 ----
 <IconTabFilter text="Reviews" id="filter2">
     <content>    
-    .. // <1>
+    <!-- insert here -->
     </content>
 </IconTabFilter>    
 ----
-<1> Add code here
 
-* Add form and table
-
+.Form for Reviews
 [source,xml]
 ----
 <form:Form id="FormRatings"
@@ -183,10 +180,10 @@ image::exc4-change-dev-space.png[change-dev-space]
 </Table>                        
 ----
 
-== Change in Details controller
+=== Modify Details controller
 
-* Method `_onBindingChange`
 
+._onBindingChange
 [source,js]
 ----
 var sRatingsPath = "ratings>/ProductRatings(" + sObjectId + ")",
@@ -198,30 +195,37 @@ oForm.bindElement(sRatingsPath);
 oTable.bindElement({path : sRatingsPath, parameters : {$expand : 'Ratings'}});
 ----
 
-== Test Configuration
+=== Test Configuration
 
 * we need to bind the new service
 
 image::exc4-bind-dervice.png[bind-dervice]
 
-== Redeploy the app
+=== Redeploy the app
 
-* Change the version in package.json
+Cince we improved our app, let's incrment the version in `package.json`
 
+.package.json
 [source,json]
 ----
 "version": "0.0.2"
 ----
 
-* Change the version in mta-yaml to `version: 0.0.2`
+Change the version also in mta-yaml to `version: 0.0.2`
 
-* Build mta archive
-** Right click on `mta.yaml` and click Build MTA
-** after build multiple versions 
+=== Build mta archive
+
+Right click on `mta.yaml` and click Build MTA
+
+After build completed a new '*.mtar' file with corresponding version will be added to folder 'mta_archives' 
 
 image::exc4-mta-versions.png[mta-versions]
 
-* Deploy the App
-** Right click on the `DemoApp_0.0.2.mtar` and Run Deploy MTA Archive
+=== Deploy the App
 
-link:https://a40506c3trial-dev-demoapp-approuter.cfapps.eu10.hana.ondemand.com/nsDemoApp/index.html[https://a40506c3trial-dev-demoapp-approuter.cfapps.eu10.hana.ondemand.com/nsDemoApp/index.html]
+Right click on the `DemoApp_0.0.2.mtar` and click on 'Deploy MTA Archive'.
+
+Our app is ready.
+
+
+// link:https://a40506c3trial-dev-demoapp-approuter.cfapps.eu10.hana.ondemand.com/nsDemoApp/index.html[https://a40506c3trial-dev-demoapp-approuter.cfapps.eu10.hana.ondemand.com/nsDemoApp/index.html]
