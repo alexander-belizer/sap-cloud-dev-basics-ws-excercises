@@ -1,4 +1,4 @@
-= Excercise 2: Simple UI5 App
+= Exercise 2: Simple UI5 App
 include::cfg/common_adoc/header.adoc[]
 
 == Objectives

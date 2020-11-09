@@ -1,4 +1,4 @@
-= Excercise 4: Extend application using previously build Service
+= Exercise 4: Extend application using previously build Service
 include::cfg/common_adoc/header.adoc[]
 
 == Objectives
@@ -11,12 +11,6 @@ include::cfg/common_adoc/header.adoc[]
 === Create new destination
 
 image::exc4-destination-ratings.png[destination-ratings]
-
-=== Change the dev space
-
-Our dev space from previous excercise has to be stopped and we need to start the `fiori` devspace.
-
-image::exc4-change-dev-space.png[change-dev-space]
 
 .Destination configuration
 [options="header",cols="15,85a"]
@@ -42,6 +36,12 @@ image::exc4-change-dev-space.png[change-dev-space]
 |WebIDESystem				|Ratings
 |WebIDEUsage				|odata_gen
 |===
+
+=== Change the dev space
+
+Our dev space from previous excercise has to be stopped and we need to start the `fiori` devspace.
+
+image::exc4-change-dev-space.png[change-dev-space]
 
 === Add the Ratings model `manifest.json`
 
