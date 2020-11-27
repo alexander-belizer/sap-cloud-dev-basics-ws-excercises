@@ -406,7 +406,7 @@ formatPicture : function (sValue) {
 
 image::exc2-test-app.jpg[alt]
 
-== Build applicaiton and deploy to cloud
+== Build application and deploy to cloud
 
 TIP: File `mta.yaml` is a *deployment descriptor*.
 
