@@ -31,13 +31,15 @@ image::exc2-step4.jpg[alt]
 
 image::exc2-step5.jpg[alt]
 
-* Basic Attributes -> Leave default values  
+* Basic Attributes -> Leave default values
 
 image::exc2-step6.jpg[alt]
 
-* Add title -> Leave default values
+* Add title
+* Choose your application name
+* Select type `Standalone App (optimized for individual deployment)`
 
-image::exc2-step7.jpg[alt]
+image::exc2-step7.png[alt]
 
 * Choose My SAP Systems as system
 * Choose Northwind as source
@@ -50,7 +52,7 @@ image::exc2-step9.jpg[alt]
 
 image::exc2-step9-1.jpg[alt]
 
-* Choose Open in New Workspace 
+* Choose Open in New Workspace
 
 image::exc2-step10.jpg[alt]
 
@@ -96,14 +98,14 @@ We need to make following changes:
 * Add additional UI components (IconTabFilter, Form)
 * Display a picture from OData service and create a formatter function
 
-== Internationalization 
+== Internationalization
 
 [IMPORTANT]
 ====
-SAPUI5 uses i18n as model for internationalization (i18n stands for internationalization). 
+SAPUI5 uses i18n as model for internationalization (i18n stands for internationalization).
 Key features of i18n Model in SAPUI5:
 
-* Model used to store translations 
+* Model used to store translations
 * SAPUI5 - Resource model is defined in `manifest.json`
 * Translations are loaded automatically according to locale settings *or* Url parameters
 
@@ -115,12 +117,12 @@ Find file `i18n.properties` and change corresponding values.
 .i18n.properties
 [options=header,cols="50,50a"]
 |===
-|Property name                      |Value 
+|Property name                      |Value
 //-----------------------------------------------------------
-|masterTitleCount                   |Products 
-|detailLineItemTableNoDataText      |No OrderDetails 
-|detailLineItemTableHeading         |Order Details 
-|detailLineItemTableHeadingCount    |Order Details ({0}) 
+|masterTitleCount                   |Products
+|detailLineItemTableNoDataText      |No OrderDetails
+|detailLineItemTableHeading         |Order Details
+|detailLineItemTableHeadingCount    |Order Details ({0})
 |detailLineItemTableIDColumn        |Order
 |detailLineItemTableUnitNumberColumn|Quantity
 |===
@@ -162,7 +164,7 @@ Add parameters object into List tag
     }"...>
 ----
 
-== Make some improvements to DetailView 
+== Make some improvements to DetailView
 === Change View to Tabbed Layout
 ==== Add IconTabBar
 
@@ -172,7 +174,7 @@ Insert object `IconTabBar` into element `semantic:content`
 [source,xml]
 ----
 <semantic:content>
-    <!-- insert here --> 
+    <!-- insert here -->
 </semantic:content>
 ----
 
@@ -186,15 +188,15 @@ Insert object `IconTabBar` into element `semantic:content`
             </content>
         </IconTabFilter>
         <IconTabFilter text="Orders" id="filter3">
-            <content>                       
+            <content>
             </content>
-        </IconTabFilter>                    
+        </IconTabFilter>
         <IconTabFilter text="Rating" id="filter4">
             <content>
             </content>
-        </IconTabFilter>       
+        </IconTabFilter>
         </items>
-</IconTabBar> 
+</IconTabBar>
 ----
 
 ==== Move Table into specific tab
@@ -206,7 +208,7 @@ Move `ItemsList` Table into content of `IconTabFilter`
 ----
 <IconTabFilter text="Orders" id="filter3">
     <content>
-        <!-- insert here -->                 
+        <!-- insert here -->
     </content>
 </IconTabFilter>
 ----
@@ -234,8 +236,8 @@ Move `ItemsList` Table into content of `IconTabFilter`
         <Column>
             <Text text="{i18n>detailLineItemTableIDColumn}"/>
         </Column>
-        <Column 
-            minScreenWidth="Tablet" 
+        <Column
+            minScreenWidth="Tablet"
             demandPopin="true" hAlign="End">
             <Text text="{i18n>detailLineItemTableUnitNumberColumn}"/>
         </Column>
@@ -253,14 +255,14 @@ Move `ItemsList` Table into content of `IconTabFilter`
 </Table>
 ----
 
-=== Modify display properties of table 
+=== Modify display properties of table
 
 Change displayed Units as follows:
 
 * Search in `<Table> <items>` for element `<ObjectNumber>` and change the binding for unit from `unit="{Quantity}"` to `unit="Units"`
 * Search in `<Table> <items>` for element `<ObjectIdentifier>` and delete the binding for text `text="{OrderID}"`
 
-=== Add Details as Form to Page 
+=== Add Details as Form to Page
 
 In order to use `Form` element in View we need to introduce corresponding namespace.
 Add namespace `xmlns:form="sap.ui.layout.form` to `View`
@@ -286,13 +288,13 @@ Find element `IconTabFilter` and insert code below.
     <content>
         <!-- insert here -->
     </content>
-</IconTabFilter>    
+</IconTabFilter>
 ----
 
 .Definition FormDetails
 [source,xml]
 ----
-<form:Form id="FormDetails" editable="false">                              
+<form:Form id="FormDetails" editable="false">
     <form:layout>
         <form:ResponsiveGridLayout
             labelSpanXL="4"
@@ -308,7 +310,7 @@ Find element `IconTabFilter` and insert code below.
             columnsL="1"
             columnsM="1"
             singleContainerFullSize="false" />
-    </form:layout>                                                                
+    </form:layout>
     <form:formContainers>
         <form:FormContainer title="Details">
             <form:formElements>
@@ -326,19 +328,19 @@ Find element `IconTabFilter` and insert code below.
                     <form:fields>
                         <Text text="{UnitsInStock}" />
                     </form:fields>
-                </form:FormElement>   
+                </form:FormElement>
                 <form:FormElement label="Units on Order">
                     <form:fields>
                         <Text text="{UnitsOnOrder}" />
                     </form:fields>
-                </form:FormElement>       
+                </form:FormElement>
                 <form:FormElement label="Reorder Level">
                     <form:fields>
                         <Text text="{ReorderLevel}" />
                     </form:fields>
-                </form:FormElement>                                    
+                </form:FormElement>
             </form:formElements>
-        </form:FormContainer>                                
+        </form:FormContainer>
         <form:FormContainer title="Supplier">
             <form:formElements>
                 <form:FormElement label="Full name of the contact">
@@ -363,7 +365,7 @@ Find element `IconTabFilter` and insert code below.
                 </form:FormElement>
             </form:formElements>
         </form:FormContainer>
-    </form:formContainers>                                
+    </form:formContainers>
 </form:Form>
 ----
 
@@ -371,33 +373,33 @@ Find element `IconTabFilter` and insert code below.
 
 Add element `ObjectHeader` to `semantic:headerContent`.
 
-IMPORTANT: Because Northwind encodes image data in particular way, 
+IMPORTANT: Because Northwind encodes image data in particular way,
 we need to introduce a formatter-function via property `formatter`.
 
 .Definition `ObjectHeader`
 [source,xml]
 ----
-<ObjectHeader 
+<ObjectHeader
     icon="{
-            path: 'Category/Picture', 
+            path: 'Category/Picture',
             formatter: '.formatter.formatPicture'
         }"
     title="{Category/CategoryName}">
-</ObjectHeader> 
+</ObjectHeader>
 ----
 
-In order to define formatter function 
+In order to define formatter function
 create `formatter.js` file in your `WebContent/model` folder with following content.
 
 .Implementation '.formatter.formatPicture'
 [source,javascript]
 ----
-// this special formatter is needed 
-// because Northwind service encodes image data in particular way 
+// this special formatter is needed
+// because Northwind service encodes image data in particular way
 formatPicture : function (sValue) {
     if (sValue) {
         var sTrimmedData = sValue.substr(104);
-        return "data:image/bmp;base64," + sTrimmedData;                
+        return "data:image/bmp;base64," + sTrimmedData;
     }
 }
 ----
