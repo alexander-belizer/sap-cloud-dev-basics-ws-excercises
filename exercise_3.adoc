@@ -3,7 +3,7 @@ include::cfg/common_adoc/header.adoc[]
 
 == Objectives
 
-* Create a simple service application 
+* Create a simple service application
 * Add mock data
 * Learn to use CDS-Views and the Cloud Foundry CLI
 * Test the service
@@ -12,7 +12,7 @@ include::cfg/common_adoc/header.adoc[]
 == Implementation
 === Service Definition
 We want to add ratings view (1 to 5 Star) for specified products.
-Ratings shall be aggregated as percentage of all ratings and displayed as barchart. 
+Ratings shall be aggregated as percentage of all ratings and displayed as barchart.
 The data for this functionality will be persisted in Hana-DB instance of the cloud.
 
 === Change dev space
@@ -25,9 +25,9 @@ Open new terminal in Business Application Studio and execute following commands:
 
 [source,console]
 ----
-$ mkdir ratings-srv
-$ cd ratings-srv
-$ cds init
+mkdir ratings-srv
+cd ratings-srv
+cds init
 ----
 
 // image::exc3-create-project-terminal.png[create-project-terminal]
@@ -35,7 +35,7 @@ $ cds init
 Install all relevant dependencies
 
 [source,console]
-$ npm install
+npm install
 
 === Folder structure
 
@@ -46,8 +46,8 @@ image::exc3-bas-folder-structure.png[bas-folder-structure]
 === Create new schema
 
 Create entities "Ratings" and "ProductRatings".
-Entity "Ratings" contains unique rating record. 
-Entity "ProductRatings" contains composition or Ratinds and supplies aggregated view of all corresponding Ratings as percentage.  
+Entity "Ratings" contains unique rating record.
+Entity "ProductRatings" contains composition or Ratinds and supplies aggregated view of all corresponding Ratings as percentage.
 
 In folder `db` create new file `schema.cds` and paste following code.
 
@@ -87,9 +87,9 @@ using {db} from '../db/schema';
 
 @path : '/ratings'    // <2>
 
-service RatingsService { // <1> 
+service RatingsService { // <1>
 
-    entity Ratings        as projection on db.Ratings; // <3> 
+    entity Ratings        as projection on db.Ratings; // <3>
 
     entity ProductRatings as  // <4>
         select from db.ProductRatings {
@@ -120,12 +120,12 @@ image::exc3-ratings-serv-test.png[ratings-serv-test]
 
 image::exc3-ratings-srv-landing.png[ratings-srv-landing]
 
-* Add `/ratings/$metadata` at the end of URL to show the metadata 
+* Add `/ratings/$metadata` at the end of URL to show the metadata
 
 === Add mock data
 
 * Mock data can be added with `.csv` files
-* Files have to be named according the Entities with the corresponding namespace 
+* Files have to be named according the Entities with the corresponding namespace
 * In `db` directory create new `data` directory
 * Create files `db.Ratings.csv` and `db.ProductRatings.csv`
 
@@ -209,7 +209,7 @@ module.exports = cds.service.impl(async (service) => {
 
 === Test the service
 
-In browser call path `/ratings/ProductRatings(1)?$expand=Ratings` 
+In browser call path `/ratings/ProductRatings(1)?$expand=Ratings`
 
 image::exc3-product-ratings-1-expand-test-1.png[product-ratings-1-expand-test-1]
 
@@ -220,6 +220,7 @@ Out `star*Perc` entities are being calculated
 In order to deploy runable service add following to `package.json` file:
 
 .package.json
+// [source,json,highlight=4..5]
 [source,json]
 ----
   "cds": {
@@ -235,8 +236,8 @@ In terminal run:
 
 [source,console]
 ----
-$ npm add @sap/hana-client --save
-$ cf login // <1>
+npm add @sap/hana-client --save
+cf login // <1>
 ----
 <1> Login with your credentials.
 
@@ -245,10 +246,10 @@ image::exc3-terminal-cf-login.png[terminal-cf-login]
 * Create the HANA service by running following commands:
 [source,console]
 ----
-$ cf create-service hanatrial hdi-shared ratings-srv-db
-$ cds build --production
-$ cf push -f gen/db
-$ cf push -f gen/srv --random-route
+cf create-service hanatrial hdi-shared ratings-srv-db
+cds build --production
+cf push -f gen/db
+cf push -f gen/srv --random-route
 ----
 
 This will take a few minutes. After succesfull deployment you will get the address of your service.

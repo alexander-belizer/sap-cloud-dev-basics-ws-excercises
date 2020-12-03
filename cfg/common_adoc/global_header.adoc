@@ -31,9 +31,12 @@ and I like last-update-label! better 😁
 //:last-update-label!:
 //
 //:title-logo-image: ./img/emi_logo.png
-// 
+//
 // Enable experimental Features
 :experimental:
+//
+:docinfo: private
+:docinfodir: docinfo
 //
 // highlight source code blocks
 // Source Highlighting: pygments kann ziemlich jeden Sourcecode korrekt darstellen.
